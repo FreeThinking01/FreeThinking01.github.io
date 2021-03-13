@@ -38,6 +38,29 @@
   </entry>
   
   <entry>
+    <title>2020年终总结</title>
+    <link href="http://example.com/2021/03/11/2020%E6%80%BB%E7%BB%93/"/>
+    <id>http://example.com/2021/03/11/2020%E6%80%BB%E7%BB%93/</id>
+    <published>2021-03-11T11:53:14.000Z</published>
+    <updated>2021-03-13T13:51:34.889Z</updated>
+    
+    <content type="html"><![CDATA[<p>2020年的生活比往年更有意义，发生了很多事。</p><h1 id="技术"><a href="#技术" class="headerlink" title="技术"></a>技术</h1><p>今年我的开发技术应该算是飞跃的一年，大把的空闲时间以及专业的改变让我更能专注于技术的提升。以前的开发能力约等于无，现在的我开发能力虽然可能还是比不过身边的同学，但是已经可以聊的有来有回了。</p><ul><li><p>完善了Java后端的技术栈。</p></li><li><p>leetcode从无到200+，基本是囫囵吞枣的填鸭式做题，不过还是对算法的应用有了点自己的理解，继续努力。</p></li><li>尝试找了实习，虽然最后没找到，但是确实给我指明了一些方向，不至于走了弯路（有一说一字节真的问的我自闭）。</li></ul><h1 id="生活"><a href="#生活" class="headerlink" title="生活"></a>生活</h1><p>进入了北邮以后，实验室的老师，学长和同学都很nice，每天晚上奋战到11点觉得很充实。我也开始有意识的开始读一些业余的书，不过买了很多看的很少hh，看完的书大概有：</p><ul><li>如何阅读一本书，不错的工具书，也契合了很多自己一直以来的学习方法。</li><li>非暴力沟通，沟通技巧总结的很好，但是我一直没有有意识的运用。</li><li>黑客与画家，nice！程序是帮助我们思考的画笔</li></ul><p>没看的书还有好多好多，希望2021的我可以勤奋一点。</p><p>进入北邮开始健身了，刚开始健身的时候别人说很难坚持，但是每天和实验室学长一起去健身以后发现这是很有意义并且并不是很难的事，虽然肌肉没有明显的改变，但是力量确实有所增强，实名感谢实验室诸多学长。</p><p>过年买了把吉他，最近一直在沉迷练习，但是还没能连贯的弹出完整的曲子，暂时按下不表。（啥时候能谈了直接发朋友圈，悄悄的惊艳所有人，不谈~~）</p><h1 id="新的一年"><a href="#新的一年" class="headerlink" title="新的一年"></a>新的一年</h1><p>我是个太贪心的人，总想在新的一年完成太多的目标，人毕竟还是要有梦想的。</p><ul><li>提升后端技术，想把github上的miaosha项目fork过来用springcloud做微服务改造。</li><li>暑假找到一个大厂实习</li><li>leetcode400+</li><li>坚持健身（顺带练练腹肌最好）</li><li>看书10本（把我买的一堆书消化消化，君主论，理想国，小狗钱钱，指数资金投资指南，乌合之众，自卑与超越，先列举这些趴）</li><li>多学几首吉他曲（想学的可太多了）</li><li>想看梁博，周杰伦的演唱会~~</li></ul><p>成为更好的自己！</p>]]></content>
+    
+    
+    <summary type="html">迟到的2020总结</summary>
+    
+    
+    
+    <category term="生活" scheme="http://example.com/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+    <category term="生活" scheme="http://example.com/tags/%E7%94%9F%E6%B4%BB/"/>
+    
+    <category term="年度总结" scheme="http://example.com/tags/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/"/>
+    
+  </entry>
+  
+  <entry>
     <title>位运算</title>
     <link href="http://example.com/2021/03/11/%E4%BD%8D%E8%BF%90%E7%AE%97/"/>
     <id>http://example.com/2021/03/11/%E4%BD%8D%E8%BF%90%E7%AE%97/</id>
