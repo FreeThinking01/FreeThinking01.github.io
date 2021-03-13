@@ -13,6 +13,8 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   
     <meta name="description" content="并查集，LRU，LFU，前缀树">
@@ -20,7 +22,7 @@
   <meta name="author" content="醉心">
   <meta name="keywords" content="">
   
-  <title>设计 - 李帅赟的博客</title>
+  <title>设计 - 醉心的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -70,7 +72,7 @@
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
-       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+       href="/">&nbsp;<strong>醉心</strong>&nbsp;</a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -234,8 +236,7 @@
 <p>开始参考的labuladong，发现平衡优化和路径压缩有问题，并查集参考：</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/93647900">https://zhuanlan.zhihu.com/p/93647900</a></p>
 <h3 id="1-1-1-问题介绍"><a href="#1-1-1-问题介绍" class="headerlink" title="1.1.1 问题介绍"></a>1.1.1 问题介绍</h3><p>简单说，动态连通性其实可以抽象成给一幅图连线。比如下面这幅图，总共有 10 个节点，他们互不相连，分别用 0~9 标记：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集1.jpg" srcset="/img/loading.gif" alt="并查集1" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集1.jpg" srcset="/img/loading.gif" alt="并查集1" style="zoom:50%;" /></p>
 <p>现在我们的 Union-Find 算法主要需要实现这两个 API：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UF</span> </span>&#123;<br>    <span class="hljs-comment">/* 将 p 和 q 连接 */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q)</span></span>;<br>    <span class="hljs-comment">/* 判断 p 和 q 是否连通 */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">connected</span><span class="hljs-params">(<span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q)</span></span>;<br>    <span class="hljs-comment">/* 返回图中有多少个连通分量 */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">count</span><span class="hljs-params">()</span></span>;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这里所说的「连通」是一种等价关系，也就是说具有如下三个性质：</p>
@@ -245,19 +246,16 @@
 <p>比如说之前那幅图，0～9 任意两个<strong>不同</strong>的点都不连通，调用<code>connected</code>都会返回 false，连通分量为 10 个。</p>
 <p>如果现在调用<code>union(0, 1)</code>，那么 0 和 1 被连通，连通分量降为 9 个。</p>
 <p>再调用<code>union(1, 2)</code>，这时 0,1,2 都被连通，调用<code>connected(0, 2)</code>也会返回 true，连通分量变为 8 个。</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集2.jpg" srcset="/img/loading.gif" alt="并查集2" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集2.jpg" srcset="/img/loading.gif" alt="并查集2" style="zoom:50%;" /></p>
 <p>判断这种「等价关系」非常实用，比如说编译器判断同一个变量的不同引用，比如社交网络中的朋友圈计算等等。</p>
 <p>这样，你应该大概明白什么是动态连通性了，Union-Find 算法的关键就在于<code>union</code>和<code>connected</code>函数的效率。那么用什么模型来表示这幅图的连通状态呢？用什么数据结构来实现代码呢？</p>
 <h3 id="1-1-2-基本思路"><a href="#1-1-2-基本思路" class="headerlink" title="1.1.2 基本思路"></a>1.1.2 基本思路</h3><p>注意我刚才把「模型」和具体的「数据结构」分开说，这么做是有原因的。因为我们使用森林（若干棵树）来表示图的动态连通性，用数组来具体实现这个森林。</p>
 <p>怎么用森林来表示连通性呢？我们设定树的每个节点有一个指针指向其父节点，如果是根节点的话，这个指针指向自己。比如说刚才那幅 10 个节点的图，一开始的时候没有相互连通，就是这样：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集3.jpg" srcset="/img/loading.gif" alt="并查集3" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集3.jpg" srcset="/img/loading.gif" alt="并查集3" style="zoom:50%;" /></p>
 <p><strong>初始化</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">UF</span> </span>&#123;<br>    <span class="hljs-comment">// 记录连通分量</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> count;<br>    <span class="hljs-comment">// 节点 x 的节点是 parent[x]</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span>[] parent;<br><br>    <span class="hljs-comment">/* 构造函数，n 为图的节点总数 */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">UF</span><span class="hljs-params">(<span class="hljs-keyword">int</span> n)</span> </span>&#123;<br>        <span class="hljs-comment">// 一开始互不连通</span><br>        <span class="hljs-keyword">this</span>.count = n;<br>        <span class="hljs-comment">// 父节点指针初始指向自己</span><br>        parent = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>[n];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; n; i++)<br>            parent[i] = i;<br>    &#125;<br><br>    <span class="hljs-comment">/* 其他函数 */</span><br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>如果某两个节点被连通，则让其中的（任意）一个节点的根节点接到另一个节点的根节点上</strong>：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集4.jpg" srcset="/img/loading.gif" alt="并查集4" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集4.jpg" srcset="/img/loading.gif" alt="并查集4" style="zoom:50%;" /></p>
 <p><strong>查询</strong></p>
 <p>递归：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/* 返回某个节点 x 的根节点 */</span><br><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">int</span> <span class="hljs-title">find</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span> </span>&#123;<br>    <span class="hljs-comment">// 根节点的 parent[x] == x</span><br>    <span class="hljs-keyword">if</span> (parent[x] != x)<br>        x = parent[x];<br>    <span class="hljs-keyword">else</span><br>        <span class="hljs-keyword">return</span> find(parent[x]);<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -266,19 +264,16 @@
 <p>合并：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q)</span> </span>&#123;<br>    <span class="hljs-comment">// 将两棵树合并为一棵</span><br>    parent[rootP] = find(rootQ);<br>    count--; <span class="hljs-comment">// 两个分量合二为一</span><br>&#125;<br><br><span class="hljs-comment">/* 返回当前的连通分量个数 */</span><br><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">count</span><span class="hljs-params">()</span> </span>&#123; <br>    <span class="hljs-keyword">return</span> count;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><strong>这样，如果节点<code>p</code>和<code>q</code>连通的话，它们一定拥有相同的根节点</strong>：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集5.jpg" srcset="/img/loading.gif" alt="并查集5" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集5.jpg" srcset="/img/loading.gif" alt="并查集5" style="zoom:50%;" /></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">connected</span><span class="hljs-params">(<span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> rootP = find(p);<br>    <span class="hljs-keyword">int</span> rootQ = find(q);<br>    <span class="hljs-keyword">return</span> rootP == rootQ;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>至此，Union-Find 算法就基本完成了。是不是很神奇？竟然可以这样使用数组来模拟出一个森林，如此巧妙的解决这个比较复杂的问题！</p>
 <p>那么这个算法的复杂度是多少呢？我们发现，主要 API<code>connected</code>和<code>union</code>中的复杂度都是<code>find</code>函数造成的，所以说它们的复杂度和<code>find</code>一样。</p>
 <p><code>find</code>主要功能就是从某个节点向上遍历到树根，其时间复杂度就是树的高度。我们可能习惯性地认为树的高度就是<code>logN</code>，但这并不一定。<code>logN</code>的高度只存在于平衡二叉树，对于一般的树可能出现极端不平衡的情况，使得「树」几乎退化成「链表」，树的高度最坏情况下可能变成<code>N</code>。</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集6.jpg" srcset="/img/loading.gif" alt="并查集6" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集6.jpg" srcset="/img/loading.gif" alt="并查集6" style="zoom:50%;" /></p>
 <p>所以说上面这种解法，<code>find</code>,<code>union</code>,<code>connected</code>的时间复杂度都是 O(N)。这个复杂度很不理想的，你想图论解决的都是诸如社交网络这样数据规模巨大的问题，对于<code>union</code>和<code>connected</code>的调用非常频繁，每次调用需要线性时间完全不可忍受。</p>
 <p><strong>问题的关键在于，如何想办法避免树的不平衡呢</strong>？只需要略施小计即可。</p>
 <h3 id="1-1-3-路径压缩"><a href="#1-1-3-路径压缩" class="headerlink" title="1.1.3 路径压缩"></a>1.1.3 路径压缩</h3><p>这步优化特别简单，所以非常巧妙。我们能不能进一步压缩每棵树的高度，使树高始终保持为常数？</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集8.jpg" srcset="/img/loading.gif" alt="并查集8" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集8.jpg" srcset="/img/loading.gif" alt="并查集8" style="zoom:50%;" /></p>
 <p>这样<code>find</code>就能以 O(1) 的时间找到某一节点的根节点，相应的，<code>connected</code>和<code>union</code>复杂度都下降为 O(1)。</p>
 <p>既然我们只关心一个元素对应的<strong>根节点</strong>，那我们希望每个元素到根节点的路径尽可能短，最好只需要一步,其实这说来也很好实现。只要我们在查询的过程中，<strong>把沿途的每个节点的父节点都设为根节点</strong>即可。</p>
 <p>递归方式：</p>
@@ -289,8 +284,7 @@
 <p>我们要知道哪种情况下可能出现不平衡现象，关键在于<code>union</code>过程：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">union</span><span class="hljs-params">(<span class="hljs-keyword">int</span> p, <span class="hljs-keyword">int</span> q)</span> </span>&#123;<br>    <span class="hljs-keyword">int</span> rootP = find(p);<br>    <span class="hljs-keyword">int</span> rootQ = find(q);<br>    <span class="hljs-keyword">if</span> (rootP == rootQ)<br>        <span class="hljs-keyword">return</span>;<br>    <span class="hljs-comment">// 将两棵树合并为一棵</span><br>    parent[rootP] = rootQ;<br>    <span class="hljs-comment">// parent[rootQ] = rootP 也可以</span><br>    count--;<br></code></pre></td></tr></table></figure>
 <p>我们一开始就是简单粗暴的把<code>p</code>所在的树接到<code>q</code>所在的树的根节点下面，那么这里就可能出现「头重脚轻」的不平衡状况，比如下面这种局面：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集7.jpg" srcset="/img/loading.gif" alt="并查集7" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集7.jpg" srcset="/img/loading.gif" alt="并查集7" style="zoom:50%;" /></p>
 <p>长此以往，树可能生长得很不平衡。<strong>我们其实是希望，小一些的树接到大一些的树下面，这样就能避免头重脚轻，更平衡一些</strong>。</p>
 <p>解决方法是我们用一个数组rank[]记录每个根节点对应的树的深度（如果不是根节点，其rank相当于以它作为根节点的<strong>子树</strong>的深度）。一开始，把所有元素的rank（<strong>秩</strong>）设为1。合并时比较两个根节点，把rank较小者往较大者上合并。路径压缩和按秩合并如果一起使用，时间复杂度接近 O(n)，但是很可能会破坏rank的准确性。</p>
 <p>初始化：</p>
@@ -307,14 +301,12 @@
 <p>比如第 130 题，被围绕的区域：给你一个 M×N 的二维矩阵，其中包含字符 <code>X</code> 和 <code>O</code>，让你找到矩阵中<strong>四面</strong>被 <code>X</code> 围住的 <code>O</code>，并且把它们替换成 <code>X</code>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">solve</span><span class="hljs-params">(<span class="hljs-keyword">char</span>[][] board)</span></span>;<br></code></pre></td></tr></table></figure>
 <p>注意哦，必须是四面被围的 <code>O</code> 才能被换成 <code>X</code>，也就是说边角上的 <code>O</code> 一定不会被围，进一步，与边角上的 <code>O</code> 相连的 <code>O</code> 也不会被 <code>X</code> 围四面，也不会被替换。</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集应用2.jpg" srcset="/img/loading.gif" alt="并查集应用2" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集应用2.jpg" srcset="/img/loading.gif" alt="并查集应用2" style="zoom:50%;" /></p>
 <p>​    PS：这让我想起小时候玩的棋类游戏「黑白棋」，只要你用两个棋子把对方的棋子夹在中间，对方的子就被替换成你的子。可见，占据四角的棋子是无敌的，与其相连的边棋子也是无敌的（无法被夹掉）。</p>
 <p>​    解决这个问题的传统方法也不困难，先用 for 循环遍历棋盘的<strong>四边</strong>，用 DFS 算法把那些与边界相连的 <code>O</code> 换成一个特殊字符，比如 <code>#</code>；然后再遍历整个棋盘，把剩下的 <code>O</code> 换成 <code>X</code>，把 <code>#</code> 恢复成 <code>O</code>。这样就能完成题目的要求，时间复杂度 O(MN)。</p>
 <p>​    这个问题也可以用 Union-Find 算法解决，虽然实现复杂一些，甚至效率也略低，但这是使用 Union-Find 算法的通用思想，值得一学。</p>
 <p><strong>你可以把那些不需要被替换的 <code>O</code> 看成一个拥有独门绝技的门派，它们有一个共同祖师爷叫 <code>dummy</code>，这些 <code>O</code> 和 <code>dummy</code> 互相连通，而那些需要被替换的 <code>O</code> 与 <code>dummy</code> 不连通</strong>。</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集应用3.jpg" srcset="/img/loading.gif" alt="并查集应用3" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/并查集应用3.jpg" srcset="/img/loading.gif" alt="并查集应用3" style="zoom:50%;" /></p>
 <p>这就是 Union-Find 的核心思路，明白这个图，就很容易看懂代码了。</p>
 <p>首先要解决的是，根据我们的实现，Union-Find 底层用的是一维数组，构造函数需要传入这个数组的大小，而题目给的是一个二维棋盘。</p>
 <p>这个很简单，二维坐标 <code>(x,y)</code> 可以转换成 <code>x * n + y</code> 这个数（<code>m</code> 是棋盘的行数，<code>n</code> 是棋盘的列数）。敲黑板，<strong>这是将二维坐标映射到一维的常用技巧</strong>。</p>
@@ -344,8 +336,7 @@
 <p>3、每次访问 <code>cache</code> 中的某个 <code>key</code>，需要将这个元素变为最近使用的，也就是说 <code>cache</code> 要支持在任意位置快速插入和删除元素。</p>
 <p>那么，什么数据结构同时符合上述条件呢？哈希表查找快，但是数据无固定顺序；链表有顺序之分，插入删除快，但是查找慢。所以结合一下，形成一种新的数据结构：哈希链表 <code>LinkedHashMap</code>。</p>
 <p>LRU 缓存算法的核心数据结构就是哈希链表，双向链表和哈希表的结合体。这个数据结构长这样：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/LRU.jpg" srcset="/img/loading.gif" alt="LRU" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/LRU.jpg" srcset="/img/loading.gif" alt="LRU" style="zoom:50%;" /></p>
 <p>借助这个结构，我们来逐一分析上面的 3 个条件：</p>
 <p>1、如果我们每次默认从链表尾部添加元素，那么显然越靠尾部的元素就是最近使用的，越靠头部的元素就是最久未使用的。</p>
 <p>2、对于某一个 <code>key</code>，我们可以通过哈希表快速定位到链表中的节点，从而取得对应 <code>val</code>。</p>
@@ -370,8 +361,7 @@
 <p>上述方法就是简单的操作封装，调用这些函数可以避免直接操作 <code>cache</code> 链表和 <code>map</code> 哈希表，下面我先来实现 LRU 算法的 <code>get</code> 方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (!map.containsKey(key)) &#123;<br>        <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>    &#125;<br>    <span class="hljs-comment">// 将该数据提升为最近使用的</span><br>    makeRecently(key);<br>    <span class="hljs-keyword">return</span> map.get(key).val;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p><code>put</code> 方法稍微复杂一些，我们先来画个图搞清楚它的逻辑：</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/LRU_put.jpg" srcset="/img/loading.gif" alt="LRU_put" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/LRU_put.jpg" srcset="/img/loading.gif" alt="LRU_put" style="zoom:50%;" /></p>
 <p>这样我们可以轻松写出 <code>put</code> 方法的代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">put</span><span class="hljs-params">(<span class="hljs-keyword">int</span> key, <span class="hljs-keyword">int</span> val)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (map.containsKey(key)) &#123;<br>        <span class="hljs-comment">// 删除旧的数据</span><br>        deleteKey(key);<br>        <span class="hljs-comment">// 新插入的数据为最近使用的数据</span><br>        addRecently(key, val);<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (cap == cache.size()) &#123;<br>        <span class="hljs-comment">// 删除最久未使用的元素</span><br>        removeLeastRecently();<br>    &#125;<br>    <span class="hljs-comment">// 添加为最近使用的元素</span><br>    addRecently(key, val);<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>至此，你应该已经完全掌握 LRU 算法的原理和实现了，我们最后用 Java 的内置类型 <code>LinkedHashMap</code> 来实现 LRU 算法，逻辑和之前完全一致，我就不过多解释了：</p>
@@ -399,7 +389,7 @@
 <p><strong>3.2、</strong>将<code>freq</code>最小的<code>key</code>删除，那你就得快速得到当前所有<code>key</code>最小的<code>freq</code>是多少。想要时间复杂度 O(1) 的话，肯定不能遍历一遍去找，那就用一个变量<code>minFreq</code>来记录当前最小的<code>freq</code>吧。</p>
 <p><strong>3.3、</strong>可能有多个<code>key</code>拥有相同的<code>freq</code>，所以 <strong><code>freq</code>对<code>key</code>是一对多的关系</strong>，即一个<code>freq</code>对应一个<code>key</code>的列表。</p>
 <p><strong>3.4、</strong>希望<code>freq</code>对应的<code>key</code>的列表是<strong>存在时序</strong>的，便于快速查找并删除最旧的<code>key</code>。</p>
-<p><strong>3.5、</strong>希望**能够快速删除<code>key</code>列表中的任何一个<code>key</code>**，因为如果频次为<code>freq</code>的某个<code>key</code>被访问，那么它的频次就会变成<code>freq+1</code>，就应该从<code>freq</code>对应的<code>key</code>列表中删除，加到<code>freq+1</code>对应的<code>key</code>的列表中。</p>
+<p><strong>3.5、</strong>希望<strong>能够快速删除<code>key</code>列表中的任何一个<code>key</code></strong>，因为如果频次为<code>freq</code>的某个<code>key</code>被访问，那么它的频次就会变成<code>freq+1</code>，就应该从<code>freq</code>对应的<code>key</code>列表中删除，加到<code>freq+1</code>对应的<code>key</code>的列表中。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">HashMap&lt;Integer, LinkedHashSet&lt;Integer&gt;&gt; freqToKeys;<br><span class="hljs-keyword">int</span> minFreq = <span class="hljs-number">0</span>;<br></code></pre></td></tr></table></figure>
 <p>介绍一下这个<code>LinkedHashSet</code>，它满足我们 3.3，3.4，3.5 这几个要求。你会发现普通的链表<code>LinkedList</code>能够满足 3.3，3.4 这两个要求，但是由于普通链表不能快速访问链表中的某一个节点，所以无法满足 3.5 的要求。</p>
 <p><code>LinkedHashSet</code>顾名思义，是链表和哈希集合的结合体。链表不能快速访问链表节点，但是插入元素具有时序；哈希集合中的元素无序，但是可以对元素进行快速的访问和删除。</p>
@@ -433,25 +423,22 @@
 <ol>
 <li>自动补全</li>
 </ol>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树1.png" srcset="/img/loading.gif" alt="前缀树1" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树1.png" srcset="/img/loading.gif" alt="前缀树1" style="zoom:50%;" /></p>
 <p>​                                                                            图 1. 谷歌的搜索建议</p>
-<ol start="2">
+<ol>
 <li>拼写检查</li>
 </ol>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树2.png" srcset="/img/loading.gif" alt="前缀树2" style="zoom: 67%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树2.png" srcset="/img/loading.gif" alt="前缀树2" style="zoom: 67%;" /></p>
 <p>​                                                                     图2. 文字处理软件中的拼写检查</p>
-<ol start="3">
+<ol>
 <li>IP 路由 (最长前缀匹配)</li>
 </ol>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树3.gif" srcset="/img/loading.gif" alt="前缀树3" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树3.gif" srcset="/img/loading.gif" alt="前缀树3" style="zoom:50%;" /></p>
 <p>​                    图 3. 使用Trie树的最长前缀匹配算法，Internet 协议（IP）路由中利用转发表选择路径。</p>
-<ol start="4">
+<ol>
 <li>T9 (九宫格) 打字预测</li>
 </ol>
-<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/%E5%89%8D%E7%BC%80%E6%A0%914.jpg" srcset="/img/loading.gif" alt="前缀树4"></p>
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树4.jpg" srcset="/img/loading.gif" alt="前缀树4"></p>
 <p>​                                            图 4. T9（九宫格输入），在 20 世纪 90 年代常用于手机输入</p>
 <p>还有其他的数据结构，如平衡树和哈希表，使我们能够在字符串数据集中搜索单词。为什么我们还需要 Trie 树呢？尽管哈希表可以在 O(1)时间内寻找键值，却无法高效的完成以下操作：</p>
 <ul>
@@ -464,7 +451,7 @@
 <li>最多 R 个指向子结点的链接，其中每个链接对应字母表数据集中的一个字母。<br>本文中假定 R 为 26，小写拉丁字母的数量。</li>
 <li>布尔字段，以指定节点是对应键的结尾还是只是键前缀。</li>
 </ul>
-<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/%E5%89%8D%E7%BC%80%E6%A0%916.png" srcset="/img/loading.gif" alt="前缀树6"></p>
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树6.png" srcset="/img/loading.gif" alt="前缀树6"></p>
 <p>​                                                                    图 6. 单词 “leet” 在 Trie 树中的表示</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TrieNode</span> </span>&#123;<br>    <span class="hljs-comment">// R links to node children</span><br>    <span class="hljs-keyword">private</span> TrieNode[] links;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">int</span> R = <span class="hljs-number">26</span>;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> isEnd;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">TrieNode</span><span class="hljs-params">()</span> </span>&#123;<br>        links = <span class="hljs-keyword">new</span> TrieNode[R];<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">containsKey</span><span class="hljs-params">(<span class="hljs-keyword">char</span> ch)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> links[ch -<span class="hljs-string">&#x27;a&#x27;</span>] != <span class="hljs-keyword">null</span>;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> TrieNode <span class="hljs-title">get</span><span class="hljs-params">(<span class="hljs-keyword">char</span> ch)</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> links[ch -<span class="hljs-string">&#x27;a&#x27;</span>];<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">put</span><span class="hljs-params">(<span class="hljs-keyword">char</span> ch, TrieNode node)</span> </span>&#123;<br>        links[ch -<span class="hljs-string">&#x27;a&#x27;</span>] = node;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setEnd</span><span class="hljs-params">()</span> </span>&#123;<br>        isEnd = <span class="hljs-keyword">true</span>;<br>    &#125;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">isEnd</span><span class="hljs-params">()</span> </span>&#123;<br>        <span class="hljs-keyword">return</span> isEnd;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>Trie 树中最常见的两个操作是键的插入和查找。</p>
@@ -473,8 +460,7 @@
 <li>链接存在。沿着链接移动到树的下一个子层。算法继续搜索下一个键字符。</li>
 <li>链接不存在。创建一个新的节点，并将它与父节点的链接相连，该链接与当前的键字符相匹配。<br>重复以上步骤，直到到达键的最后一个字符，然后将当前节点标记为结束节点，算法完成。</li>
 </ul>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树7.png" srcset="/img/loading.gif" alt="前缀树7" style="zoom:50%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树7.png" srcset="/img/loading.gif" alt="前缀树7" style="zoom:50%;" /></p>
 <p>​                                                                        图 7. 向 Trie 树中插入键</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Trie</span> </span>&#123;<br>    <span class="hljs-keyword">private</span> TrieNode root;<br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Trie</span><span class="hljs-params">()</span> </span>&#123;<br>        root = <span class="hljs-keyword">new</span> TrieNode();<br>    &#125;<br><br>    <span class="hljs-comment">// Inserts a word into the trie.</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(String word)</span> </span>&#123;<br>        TrieNode node = root;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; word.length(); i++) &#123;<br>            <span class="hljs-keyword">char</span> currentChar = word.charAt(i);<br>            <span class="hljs-keyword">if</span> (!node.containsKey(currentChar)) &#123;<br>                node.put(currentChar, <span class="hljs-keyword">new</span> TrieNode());<br>            &#125;<br>            node = node.get(currentChar);<br>        &#125;<br>        node.setEnd();<br>    &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
 <p>复杂度分析</p>
@@ -491,8 +477,7 @@
 </ul>
 </li>
 </ul>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树8.png" srcset="/img/loading.gif" alt="前缀树8" style="zoom: 67%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树8.png" srcset="/img/loading.gif" alt="前缀树8" style="zoom: 67%;" /></p>
 <p>​                                                                    图 8. 在 Trie 树中查找键</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Trie</span> </span>&#123;<br>        ...<br>    <span class="hljs-comment">// search a prefix or whole key in trie and</span><br>    <span class="hljs-comment">// returns the node where search ends</span><br>    <span class="hljs-function"><span class="hljs-keyword">private</span> TrieNode <span class="hljs-title">searchPrefix</span><span class="hljs-params">(String word)</span> </span>&#123;<br>        TrieNode node = root;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; word.length(); i++) &#123;<br>           <span class="hljs-keyword">char</span> curLetter = word.charAt(i);<br>           <span class="hljs-keyword">if</span> (node.containsKey(curLetter)) &#123;<br>               node = node.get(curLetter);<br>           &#125; <span class="hljs-keyword">else</span> &#123;<br>               <span class="hljs-keyword">return</span> <span class="hljs-keyword">null</span>;<br>           &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> node;<br>&#125;<br><br>    <span class="hljs-comment">// Returns if the word is in the trie.</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">search</span><span class="hljs-params">(String word)</span> </span>&#123;<br>       TrieNode node = searchPrefix(word);<br>       <span class="hljs-keyword">return</span> node != <span class="hljs-keyword">null</span> &amp;&amp; node.isEnd();<br>    &#125;<br> &#125;<br></code></pre></td></tr></table></figure>
 <p>复杂度分析</p>
@@ -501,8 +486,7 @@
 <li>空间复杂度 : O(1)。</li>
 </ul>
 <h2 id="4-5-查找-Trie-树中的键前缀"><a href="#4-5-查找-Trie-树中的键前缀" class="headerlink" title="4.5 查找 Trie 树中的键前缀"></a>4.5 查找 Trie 树中的键前缀</h2><p>​       该方法与在 Trie 树中搜索键时使用的方法非常相似。我们从根遍历 Trie 树，直到键前缀中没有字符，或者无法用当前的键字符继续 Trie 中的路径。与上面提到的“搜索键”算法唯一的区别是，到达键前缀的末尾时，总是返回 true。我们不需要考虑当前 Trie 节点是否用 “isend” 标记，因为我们搜索的是键的前缀，而不是整个键。</p>
-<img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树9.png" srcset="/img/loading.gif" alt="前缀树9" style="zoom: 67%;" />
-
+<p><img src="http://hexo-bolg-image.oss-cn-beijing.aliyuncs.com/img/前缀树9.png" srcset="/img/loading.gif" alt="前缀树9" style="zoom: 67%;" /></p>
 <p>​                                                                    图 9. 查找 Trie 树中的键前缀</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Trie</span> </span>&#123;<br>        ...<br>    <span class="hljs-comment">// Returns if there is any word in the trie</span><br>    <span class="hljs-comment">// that starts with the given prefix.</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">startsWith</span><span class="hljs-params">(String prefix)</span> </span>&#123;<br>        TrieNode node = searchPrefix(prefix);<br>        <span class="hljs-keyword">return</span> node != <span class="hljs-keyword">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>复杂度分析</p>
@@ -512,24 +496,6 @@
 </ul>
 <p>汇总代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Trie</span> </span>&#123;<br><br>    <span class="hljs-keyword">boolean</span> isEnd = <span class="hljs-keyword">false</span>;<br>    Trie[] next = <span class="hljs-keyword">new</span> Trie[<span class="hljs-number">26</span>];<br>    <br><br><br>    <span class="hljs-comment">/** Initialize your data structure here. */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Trie</span><span class="hljs-params">()</span> </span>&#123;<br><br>    &#125;<br>    <br>    <span class="hljs-comment">/** Inserts a word into the trie. */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(String word)</span> </span>&#123;<br>        Trie root = <span class="hljs-keyword">this</span>;<br>        <span class="hljs-keyword">char</span>[] chars = word.toCharArray();<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; chars.length; i++)&#123;<br>            <span class="hljs-keyword">if</span>(root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>] == <span class="hljs-keyword">null</span>)&#123;<br>                root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>] = <span class="hljs-keyword">new</span> Trie();<br>            &#125;<br>            root = root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>];<br>        &#125;<br>        root.isEnd = <span class="hljs-keyword">true</span>;<br>    &#125;<br>    <br>    <span class="hljs-comment">/** Returns if the word is in the trie. */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">search</span><span class="hljs-params">(String word)</span> </span>&#123;<br>        Trie root = <span class="hljs-keyword">this</span>;<br>        <span class="hljs-keyword">char</span>[] chars = word.toCharArray();<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; chars.length; i++)&#123;<br>            <span class="hljs-keyword">if</span>(root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>] == <span class="hljs-keyword">null</span>)&#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>            &#125;<br>            root = root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>];<br>        &#125;<br>        <span class="hljs-keyword">return</span> root.isEnd;<br>    &#125;<br>    <br>    <span class="hljs-comment">/** Returns if there is any word in the trie that starts with the given prefix. */</span><br>    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">startsWith</span><span class="hljs-params">(String prefix)</span> </span>&#123;<br>        Trie root = <span class="hljs-keyword">this</span>;<br>        <span class="hljs-keyword">char</span>[] chars = prefix.toCharArray();<br>        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i &lt; chars.length; i++)&#123;<br>            <span class="hljs-keyword">if</span>(root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>] == <span class="hljs-keyword">null</span>)&#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;<br>            &#125;<br>            root = root.next[chars[i] - <span class="hljs-string">&#x27;a&#x27;</span>];<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             </div>
             <hr>
@@ -734,6 +700,45 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
 
 
 

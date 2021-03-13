@@ -13,6 +13,8 @@
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
   <meta name="theme-color" content="#2f4154">
   
     <meta name="description" content="位运算的相关技巧">
@@ -20,7 +22,7 @@
   <meta name="author" content="醉心">
   <meta name="keywords" content="">
   
-  <title>位运算 - 李帅赟的博客</title>
+  <title>位运算 - 醉心的博客</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
 
@@ -70,7 +72,7 @@
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
-       href="/">&nbsp;<strong>Fluid</strong>&nbsp;</a>
+       href="/">&nbsp;<strong>醉心</strong>&nbsp;</a>
 
     <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarSupportedContent"
@@ -266,7 +268,7 @@
 </li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">8</span><span class="hljs-string">;</span><br><span class="hljs-string">a</span> <span class="hljs-string">&lt;&lt;</span> <span class="hljs-number">3</span><span class="hljs-string">;</span><br><span class="hljs-string">移位前：0000</span> <span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">1000</span><br><span class="hljs-string">移位后：0000</span> <span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0100 </span><span class="hljs-number">0000</span><br></code></pre></td></tr></table></figure>
-<p>&gt;&gt; 右移运算，向右进行移位操作，对无符号数，高位补 0，对于有符号数，高位补符号位，如</p>
+<p>>&gt; 右移运算，向右进行移位操作，对无符号数，高位补 0，对于有符号数，高位补符号位，如</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">unsigned</span> <span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">8</span><span class="hljs-string">;</span><br><span class="hljs-string">a</span> <span class="hljs-string">&gt;&gt;</span> <span class="hljs-number">3</span><span class="hljs-string">;</span><br><span class="hljs-string">移位前：0000</span> <span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">1000</span><br><span class="hljs-string">移位后：0000</span> <span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0000 </span><span class="hljs-number">0001</span><br><br><span class="hljs-string">int</span> <span class="hljs-string">a</span> <span class="hljs-string">=</span> <span class="hljs-number">-8</span><span class="hljs-string">;</span><br><span class="hljs-string">a</span> <span class="hljs-string">&gt;&gt;</span> <span class="hljs-number">3</span><span class="hljs-string">;</span><br><span class="hljs-string">移位前：1111</span> <span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1000</span><br><span class="hljs-string">移位后：1111</span> <span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111 </span><span class="hljs-number">1111</span><br></code></pre></td></tr></table></figure>
 <p>常见位运算问题</p>
 <p><strong>1. 位操作实现乘除法</strong></p>
@@ -279,9 +281,9 @@
 <li>位操作交换两数可以不需要第三个临时变量，虽然普通操作也可以做到，但是没有其效率高</li>
 </ul>
 <figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs arduino"><span class="hljs-comment">//普通操作</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">swap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> &amp;a, <span class="hljs-keyword">int</span> &amp;b)</span> </span>&#123;<br>    a = a + b;<br>    b = a - b;<br>    a = a - b;<br>&#125;<br><br><span class="hljs-comment">//位与操作</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">swap</span><span class="hljs-params">(<span class="hljs-keyword">int</span> &amp;a, <span class="hljs-keyword">int</span> &amp;b)</span> </span>&#123;<br>    a ^= b;<br>    b ^= a;<br>    a ^= b;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>位与操作解释：第一步：a ^= b —&gt; a = (a^b); </p>
-<p>第二步：b ^= a —&gt; b = b^(a^b) —&gt; b = (b^b)^a = a</p>
-<p>第三步：a ^= b —&gt; a = (a^b)^a = (a^a)^b = b</p>
+<p>位与操作解释：第一步：a ^= b —-&gt; a = (a^b); </p>
+<p>第二步：b ^= a —-&gt; b = b^(a^b) —-&gt; b = (b^b)^a = a</p>
+<p>第三步：a ^= b —-&gt; a = (a^b)^a = (a^a)^b = b</p>
 <p><strong>3. 位操作判断奇偶数</strong></p>
 <ul>
 <li>只要根据数的最后一位是 0 还是 1 来决定即可，为 0 就是偶数，为 1 就是奇数。</li>
@@ -305,7 +307,7 @@
 <li>给定一个 16 位的无符号整数，将其高 8 位与低 8 位进行交换，求出交换后的值，如：</li>
 </ul>
 <figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">34520</span>的二进制表示：<br><span class="hljs-number">10000110</span> <span class="hljs-number">11011000</span><br><br>将其高<span class="hljs-number">8</span>位与低<span class="hljs-number">8</span>位进行交换，得到一个新的二进制数：<br><span class="hljs-number">11011000</span> <span class="hljs-number">10000110</span><br>其十进制为<span class="hljs-number">55430</span><br></code></pre></td></tr></table></figure>
-<p>从上面移位操作我们可以知道，只要将无符号数 a&gt;&gt;8 即可得到其高 8 位移到低 8 位，高位补 0；将 a&lt;&lt;8 即可将 低 8 位移到高 8 位，低 8 位补 0，然后将 a&gt;&gt;8 和 a&lt;&lt;8 进行或操作既可求得交换后的结果。</p>
+<p>从上面移位操作我们可以知道，只要将无符号数 a&gt;&gt;8 即可得到其高 8 位移到低 8 位，高位补 0；将 a&lt;<8 即可将 低 8 位移到高 8 位，低 8 位补 0，然后将 a>&gt;8 和 a&lt;&lt;8 进行或操作既可求得交换后的结果。</p>
 <figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">unsigned short a</span> = 34520; <br><span class="hljs-attribute">a</span> = (a &gt;&gt; 8) | (a &lt;&lt; 8);<br></code></pre></td></tr></table></figure>
 <p><strong>7. 位操作进行二进制逆序</strong></p>
 <p>将无符号数的二进制表示进行逆序，求取逆序后的结果，如</p>
@@ -315,14 +317,10 @@
 <li>第一步:以每 2 位为一组，组内进行高低位交换</li>
 </ul>
 <figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs tap">交换前：<span class="hljs-number"> 10 </span>00<span class="hljs-number"> 01 </span>10<span class="hljs-number"> 11 </span>01<span class="hljs-number"> 10 </span>00 <br>交换后：<span class="hljs-number"> 01 </span>00<span class="hljs-number"> 10 </span>01<span class="hljs-number"> 11 </span>10<span class="hljs-number"> 01 </span>00<br></code></pre></td></tr></table></figure>
-
-
 <ul>
 <li>第二步：在上面的基础上，以每 4 位为 1 组，组内高低位进行交换</li>
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs yaml"><span class="hljs-string">交换前：</span> <span class="hljs-number">0100 </span><span class="hljs-number">1001 </span><span class="hljs-number">1110 </span><span class="hljs-number">0100</span> <br><span class="hljs-string">交换后：</span> <span class="hljs-number">0001 </span><span class="hljs-number">0110 </span><span class="hljs-number">1011 </span><span class="hljs-number">0001</span><br></code></pre></td></tr></table></figure>
-
-
 <ul>
 <li>第三步：以每 8 位为一组，组内高低位进行交换</li>
 </ul>
@@ -560,6 +558,45 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
 
 
 
