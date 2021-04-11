@@ -190,7 +190,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.8k 字
+      1.9k 字
     </span>
   
 
@@ -200,7 +200,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      21
+      23
        分钟
     </span>
   
@@ -284,6 +284,14 @@
 <h2 id="3-3-防范手段"><a href="#3-3-防范手段" class="headerlink" title="3.3 防范手段"></a>3.3 防范手段</h2><p><strong>使用参数化查询</strong></p>
 <p>Java 中的 PreparedStatement 是预先编译的 SQL 语句，可以传入适当参数并且多次执行。由于没有拼接的过程，因此可以防止 SQL 注入的发生。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">PreparedStatement stmt = connection.prepareStatement(<span class="hljs-string">&quot;SELECT * FROM users WHERE userid=? AND password=?&quot;</span>);<br>stmt.setString(<span class="hljs-number">1</span>, userid);<br>stmt.setString(<span class="hljs-number">2</span>, password);<br>ResultSet rs = stmt.executeQuery();<br></code></pre></td></tr></table></figure>
+<p>PreparedStatement可以防止SQL注入的重要原因是预编译和占位符的使用：</p>
+<p>原始代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">select * from student where id = <span class="hljs-number">123</span>;<br></code></pre></td></tr></table></figure>
+<p>SQL注入代码：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> id = <span class="hljs-number">123</span> <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;1&#x27;</span> = <span class="hljs-string">&#x27;1&#x27;</span>;<br></code></pre></td></tr></table></figure>
+<p>此时数据库认为id = 123和‘1’ = ‘1’成立一个即可，如果使用预编译：</p>
+<figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs n1ql"><span class="hljs-keyword">select</span> * <span class="hljs-keyword">from</span> student <span class="hljs-keyword">where</span> id = (<span class="hljs-number">123</span> <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;1&#x27;</span> = <span class="hljs-string">&#x27;1&#x27;</span>);<br></code></pre></td></tr></table></figure>
+<p>传入的参数被作为整体代入占位符。</p>
 <p><strong>单引号转换</strong></p>
 <p>将传入的参数中的单引号转换为连续两个单引号，PHP 中的 Magic quote 可以完成这个功能。</p>
 <h1 id="4-拒绝服务攻击"><a href="#4-拒绝服务攻击" class="headerlink" title="4. 拒绝服务攻击"></a>4. 拒绝服务攻击</h1><p>拒绝服务攻击（denial-of-service attack，DoS），亦称洪水攻击，其目的在于使目标电脑的网络或系统资源耗尽，使服务暂时中断或停止，导致其正常用户无法访问。</p>
@@ -323,6 +331,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/03/18/%E6%8E%92%E5%BA%8F/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">排序</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
