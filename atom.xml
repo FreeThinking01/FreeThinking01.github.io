@@ -6,7 +6,7 @@
   <link href="http://lishuaiyun.cn/atom.xml" rel="self"/>
   
   <link href="http://lishuaiyun.cn/"/>
-  <updated>2021-05-01T06:15:23.395Z</updated>
+  <updated>2022-02-27T09:06:45.486Z</updated>
   <id>http://lishuaiyun.cn/</id>
   
   <author>
@@ -15,6 +15,19 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>threadlocal</title>
+    <link href="http://lishuaiyun.cn/2022/02/27/threadlocal/"/>
+    <id>http://lishuaiyun.cn/2022/02/27/threadlocal/</id>
+    <published>2022-02-27T09:06:45.000Z</published>
+    <updated>2022-02-27T09:06:45.486Z</updated>
+    
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>安河桥间奏</title>
