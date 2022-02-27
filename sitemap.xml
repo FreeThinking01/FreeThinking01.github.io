@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://lishuaiyun.cn/2022/02/27/threadlocal/</loc>
+    <loc>http://lishuaiyun.cn/2022/02/21/threadlocal/</loc>
     
     <lastmod>2022-02-27</lastmod>
     
@@ -348,6 +348,13 @@
   
   <url>
     <loc>http://lishuaiyun.cn/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/</loc>
+    <lastmod>2022-02-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://lishuaiyun.cn/tags/Java%E6%BA%90%E7%A0%81/</loc>
     <lastmod>2022-02-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
