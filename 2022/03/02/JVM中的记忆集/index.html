@@ -17,16 +17,32 @@
   
   <meta name="theme-color" content="#2f4154">
   
-    <meta name="description" content="自由思考比畅所欲言更重要">
+    <meta name="description" content="JVM中的记忆集作用">
   
   <meta name="author" content="醉心">
   <meta name="keywords" content="">
   
   <meta name="baidu-site-verification" content="code-bHMYoJFxX1" />
   <meta name="google-site-verification" content="dlGT8DnmMC48-BTTmOm7R2wqNL0vR3kmzSo22BfG3hg" />
-  <title>归档 - FreeThinking&#39;s blog</title>
+  <title>JVM中的记忆集 - FreeThinking&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.4.0/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -55,7 +71,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -154,9 +170,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="JVM中的记忆集">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2022-03-02 11:39" pubdate>
+        2022年3月2日 中午
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      440 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      4
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -169,40 +222,124 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">JVM中的记忆集</h1>
+            
+            <div class="markdown-body">
+              <p>在JVM中的跨代引用这里一直有些疑惑，Minor GC时应该是从GC Roots为起点遍历整个分析链，这样的话要记忆集干嘛呢，因为记忆集是防止遍历老年代的呀。那如果GC Roots只遍历年轻代为止，JVM怎么知道遍历到的节点是年轻代还是老年代呢。</p>
+<p>查了一些资料其实还挺深入的。</p>
+<p><strong>新生代GC的时候从GC Roots出发不会扫描整个图，而是遍历到老年代对象就会停止（防止遍历整个老年代，节省开销）</strong>。因为HotSpot虚拟机在堆中地址空间连续，有一个分界线，一边是新生代，一边是老年代，如果遍历到老年代停止那老年代引用的新生代对象无法被遍历到，此时我们需要记忆集来维护一个列表记录哪些新生代被老年代引用，将这些老年代也加入GC Roots（因为是Minor GC，默认老年代都存活）。（记忆集的一种实现叫做卡表）</p>
+<p>GC Roots是一组活跃的引用，通常是：</p>
+<ul>
+<li>Java 虚拟机栈（栈帧中的本地变量表）中引用的对象</li>
+<li><p>本地方法栈中引用的对象</p>
+</li>
+<li><p>方法区中常量引用的对象</p>
+</li>
+<li><p>方法区中类静态属性引用的对象</p>
+</li>
+<li><p>所有被同步锁（synchronized关键字）持有的对象。 </p>
+</li>
+</ul>
+<p>但也不只是这些，在Minor GC时不知道老年代的存活情况，默认老年代是存活的，<strong>所以要把引用新生代的老年代也都加入到GC Roots中。</strong></p>
+<p>参考链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/53613423/answer/135743258">RednaxelaFX</a></li>
+<li><a href="[垃圾回收机制 | 对线面试官 (gitee.io">Java3y</a>](<a target="_blank" rel="noopener" href="http://javainterview.gitee.io/luffy/2021/08/19/04-Java虚拟机/04">http://javainterview.gitee.io/luffy/2021/08/19/04-Java虚拟机/04</a>. 垃圾回收机制/))</li>
+</ul>
+
+            </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/Java/">Java</a>
+                    
+                  </div>
+                
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/JVM/">JVM</a>
+                    
+                  </div>
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/03/02/happens-before/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">happens-before</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/02/21/threadlocal/">
+                        <span class="hidden-mobile">threadlocal源码分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+              <!-- Comments -->
+              <article class="comments" id="comments">
+                
+                  
+                
                 
 
-<div class="list-group">
-  <p class="h4">共计 21 篇文章</p>
-  <hr>
-  
-  
-    
-      
-      <p class="h5">2021</p>
-    
-    <a href="/2021/01/28/Java%E7%A7%92%E6%9D%80%E7%B3%BB%E7%BB%9F/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">Java秒杀系统</span>
-      <time style="float: right;">01-28</time>
-    </a>
-  
-</div>
-
-
-
-
-
-              </div>
-            </div>
-          </div>
+              </article>
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -282,9 +419,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.0/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.0/anchor.min.js" ></script>
 
 
 
@@ -324,6 +467,45 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-svg.js" ></script>
+
+  
 
 
 
