@@ -2,14 +2,14 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://lishuaiyun.cn/2022/03/02/JVM%E4%B8%AD%E7%9A%84%E8%AE%B0%E5%BF%86%E9%9B%86/</loc>
+    <loc>http://lishuaiyun.cn/2022/02/12/happens-before/</loc>
     
     <lastmod>2022-03-02</lastmod>
     
   </url>
   
   <url>
-    <loc>http://lishuaiyun.cn/2022/03/02/happens-before/</loc>
+    <loc>http://lishuaiyun.cn/2022/03/02/JVM%E4%B8%AD%E7%9A%84%E8%AE%B0%E5%BF%86%E9%9B%86/</loc>
     
     <lastmod>2022-03-02</lastmod>
     
@@ -383,6 +383,13 @@
   
   <url>
     <loc>http://lishuaiyun.cn/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2022-03-02</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://lishuaiyun.cn/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2022-03-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
