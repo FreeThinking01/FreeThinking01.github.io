@@ -1,32 +1,167 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>杀死一只知更鸟 | FreeThinking's blog</title><meta name="keywords" content="小说"><meta name="author" content="醉心"><meta name="copyright" content="醉心"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一个人很少能赢，但有时也会。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="杀死一只知更鸟">
+<meta property="og:url" content="http://lishuaiyun.cn/2021/04/23/%E6%9D%80%E6%AD%BB%E4%B8%80%E5%8F%AA%E7%9F%A5%E6%9B%B4%E9%B8%9F/index.html">
+<meta property="og:site_name" content="FreeThinking&#39;s blog">
+<meta property="og:description" content="一个人很少能赢，但有时也会。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2021-04-23T14:59:40.000Z">
+<meta property="article:modified_time" content="2021-05-01T06:15:00.000Z">
+<meta property="article:author" content="醉心">
+<meta property="article:tag" content="小说">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://lishuaiyun.cn/2021/04/23/%E6%9D%80%E6%AD%BB%E4%B8%80%E5%8F%AA%E7%9F%A5%E6%9B%B4%E9%B8%9F/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '杀死一只知更鸟',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2021-05-01 14:15:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-block content
-  #post
-    if top_img === false
-      include includes/header/post-info.pug
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
 
-    article#article-container.post-content!=page.content
-    include includes/post/post-copyright.pug
-    .tag_share
-      if (theme.post_meta.post.tags)
-        .post-meta__tag-list
-          each item, index in page.tags.data
-            a(href=url_for(item.path)).post-meta__tags #[=item.name]
-      include includes/third-party/share/index.pug
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
         
-    if theme.reward.enable && theme.reward.QR_code
-      !=partial('includes/post/reward', {}, {cache: true})
-
-    //- ad
-    if theme.ad && theme.ad.post
-      .ads-wrap!=theme.ad.post
-
-    if theme.post_pagination
-      include includes/pagination.pug
-    if theme.related_post && theme.related_post.enable
-      != related_posts(page,site.posts)
-
-    if page.comments !== false && theme.comments && theme.comments.use
-      - var commentsJsLoad = true
-      !=partial('includes/third-party/comments/index', {}, {cache: true})
-      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 5.3.0"><link rel="alternate" href="/atom.xml" title="FreeThinking's blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">FreeThinking's blog</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">杀死一只知更鸟</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-04-23T14:59:40.000Z" title="发表于 2021-04-23 22:59:40">2021-04-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-01T06:15:00.000Z" title="更新于 2021-05-01 14:15:00">2021-05-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AF%BB%E4%B9%A6%E5%88%86%E4%BA%AB/">读书分享</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="杀死一只知更鸟"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>&emsp;&emsp;《杀死一只知更鸟》前半部分很枯燥，基本都是在交代故事背景，埋下伏笔，甚至我是硬着头皮看下去的，当小说进行到后半部分高潮迭起，并与前文的伏笔一一呼应，才让我明白了这的确是一本不可多得的好书。</p>
+<p>&emsp;&emsp;故事发生在上个世纪三十年代初，虽然美国已经废除了奴隶制，但对黑人的歧视仍根植于每个白人的血液里，但是阿迪克斯顶着社会舆论的压力要为黑人汤姆辩护，因为汤姆被人指责强奸，但他是无辜的，尽管没有白人愿意相信，各种流言蜚语冲击着阿迪克斯的家庭，但他仍然坚定自己的信念，他是个完美的父亲，教导孩子保持善良，坚守勇敢，反对暴力。</p>
+<p>他始终不愿意满足杰姆持枪的愿望，后来杰姆知道自己的父亲是小镇第一神枪手，但他却从来不主张用枪。</p>
+<p>他教导杰姆什么是勇敢：<strong>不要错误地认为一个人手握枪支就是勇敢。勇敢就是，在你还没开始的时候就知道自己注定会输，但依然义无反顾地去做，并且不管发生什么都坚持到底。一个人很少能赢，但有时也会。</strong></p>
+<p>他在法庭上义正言辞的为黑人辩护：<strong>我不是一个理想主义者，我并不坚信我们的法庭和我们的陪审制度完美无缺、公正无私——它们对我来说，不是理想，而是活生生的工作状态。先生们，法庭不会比坐在我面前的任何一位陪审团成员更公正。法庭只能和它的陪审团一样完善，而陪审团只能和它的每一位成员一样完善。我对诸位先生充满信心，相信你们会用理性的眼光重新审查你们听到的证词，做出一个裁决，让被告和家人团聚。以上帝的名义，尽你们的职责吧。</strong></p>
+<p>可惜，最终阿迪克斯的演讲没有战胜偏见，法庭上的众多白人在无可辩驳的事实前仍然选择了处死黑人汤姆。</p>
+<p>是的，阿迪克斯知道自己很难战胜人们心中的偏见，但他仍然坚定地为黑人辩护，他用实际行动践行了自己对勇敢的定义，<strong>你还没开始的时候就知道自己注定会输，但依然义无反顾地去做，并且不管发生什么都坚持到底。</strong></p>
+<p>故事的另一条线是怪人拉德利，小镇上的人从不让孩子靠近拉德利家，人们认为他是恶魔，小镇上的很多邪恶勾当都和拉德利脱不开关系，流言蜚语迫使拉德利不愿出门。</p>
+<p>但所有人都误会了他，他通过树洞送给孩子们礼物，帮杰姆把裤子缝好放在篱笆旁，当斯科特和杰姆有生命危险时，他挺身而出。书中结尾，斯科特被救后第一次见到拉德利的时的问候：</p>
+<p><strong>“你好，怪人”</strong></p>
+<p>面对未知的事物，自己不了解的人，不应该有先入为主的判断，耳听为虚，眼见为实，偏见是最没有礼貌的事。</p>
+<p><strong>你永远也不可能真正了解一个人，除非你穿上他的鞋子走来走去，站在他的角度考虑问题。</strong></p>
+<p>还有一些精彩的句子：</p>
+<p>除了恐惧本身，没有什么可恐惧的。</p>
+<p>你为什么这么做？”杰姆轻声轻气地说：“她说你替黑鬼和人渣打官司。”</p>
+<p>“他们当然有权利那样想，他们的看法也有权得到充分的尊重，”阿迪克斯说，“但是，我在接受他人之前，首先要接受自己。有一种东西不能遵循从众原则，那就是人的良心。”</p>
+<p>杰姆平静地回了一句：“我妹妹不邋遢，我也不怕你。”</p>
+<p>“一个人没必要把自己懂的东西都展现出来。这不是淑女的做派——再说了，人们不喜欢他们身边有什么人比他们懂得多。这会让他们气不打一处来。你使用的语言再标准，也改变不了他们。除非他们自己想学，否则一点儿办法也没有。你要么闭上嘴巴，要么跟他们说一样的话。”</p>
+<p>阿迪克斯说过，与人交谈的礼貌做法是谈论对方感兴趣的事情，而不是大谈特谈自己的兴趣点。</p>
+<p>我不是一个理想主义者，我并不坚信我们的法庭和我们的陪审制度完美无缺、公正无私——它们对我来说，不是理想，而是活生生的工作状态。先生们，法庭不会比坐在我面前的任何一位陪审团成员更公正。法庭只能和它的陪审团一样完善，而陪审团只能和它的每一位成员一样完善。我对诸位先生充满信心，相信你们会用理性的眼光重新审查你们听到的证词，做出一个裁决，让被告和家人团聚。以上帝的名义，尽你们的职责吧。</p>
+<p>在我们生活的这个世界上，总有什么东西让人丧失理智——即使他们努力想做到公平，结果还是事与愿违。在我们的法庭上，当对立双方是一个白人和一个黑人的时候，白人总是胜诉。这些事情很丑恶，可现实生活就是如此。”</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">醉心</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://lishuaiyun.cn/2021/04/23/%E6%9D%80%E6%AD%BB%E4%B8%80%E5%8F%AA%E7%9F%A5%E6%9B%B4%E9%B8%9F/">http://lishuaiyun.cn/2021/04/23/%E6%9D%80%E6%AD%BB%E4%B8%80%E5%8F%AA%E7%9F%A5%E6%9B%B4%E9%B8%9F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://lishuaiyun.cn" target="_blank">FreeThinking's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B0%8F%E8%AF%B4/">小说</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/04/30/%E5%AE%89%E6%B2%B3%E6%A1%A5%E9%97%B4%E5%A5%8F/"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">安河桥间奏</div></div></a></div><div class="next-post pull-right"><a href="/2021/04/21/%E5%90%9B%E4%B8%BB%E8%AE%BA/"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">君主论</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">醉心</div><div class="author-info__description">自由思考比畅所欲言更重要</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">31</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/FreeThinking01" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:besokuse8@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2022/03/02/JVM%E4%B8%AD%E7%9A%84%E8%AE%B0%E5%BF%86%E9%9B%86/" title="JVM中的记忆集"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="JVM中的记忆集"/></a><div class="content"><a class="title" href="/2022/03/02/JVM%E4%B8%AD%E7%9A%84%E8%AE%B0%E5%BF%86%E9%9B%86/" title="JVM中的记忆集">JVM中的记忆集</a><time datetime="2022-03-02T03:39:33.000Z" title="发表于 2022-03-02 11:39:33">2022-03-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/21/threadlocal/" title="threadlocal源码分析"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="threadlocal源码分析"/></a><div class="content"><a class="title" href="/2022/02/21/threadlocal/" title="threadlocal源码分析">threadlocal源码分析</a><time datetime="2022-02-21T09:06:45.000Z" title="发表于 2022-02-21 17:06:45">2022-02-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2022/02/12/happens-before/" title="happens-before"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="happens-before"/></a><div class="content"><a class="title" href="/2022/02/12/happens-before/" title="happens-before">happens-before</a><time datetime="2022-02-12T12:39:49.000Z" title="发表于 2022-02-12 20:39:49">2022-02-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/09/28/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="单例模式"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="单例模式"/></a><div class="content"><a class="title" href="/2021/09/28/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="单例模式">单例模式</a><time datetime="2021-09-28T07:05:27.000Z" title="发表于 2021-09-28 15:05:27">2021-09-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/04/30/%E5%AE%89%E6%B2%B3%E6%A1%A5%E9%97%B4%E5%A5%8F/" title="安河桥间奏"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="安河桥间奏"/></a><div class="content"><a class="title" href="/2021/04/30/%E5%AE%89%E6%B2%B3%E6%A1%A5%E9%97%B4%E5%A5%8F/" title="安河桥间奏">安河桥间奏</a><time datetime="2021-04-30T10:21:14.000Z" title="发表于 2021-04-30 18:21:14">2021-04-30</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 醉心</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
